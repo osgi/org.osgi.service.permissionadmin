@@ -1,4 +1,4 @@
-package org.osgi.test.cases.permission.contextsharer;
+package org.osgi.test.cases.permissionadmin.main.contextsharer;
 
 import java.lang.reflect.*;
 import java.util.*;

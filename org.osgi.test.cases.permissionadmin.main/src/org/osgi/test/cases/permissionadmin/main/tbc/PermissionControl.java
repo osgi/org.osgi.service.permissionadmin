@@ -25,7 +25,7 @@
  * All Company, brand and product names may be trademarks that are the sole
  * property of their respective owners. All rights reserved.
  */
-package org.osgi.test.cases.permission.tbc;
+package org.osgi.test.cases.permissionadmin.main.tbc;
 
 import java.io.*;
 import org.osgi.framework.*;
