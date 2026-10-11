@@ -17,8 +17,9 @@
  *******************************************************************************/
 package org.osgi.test.cases.permissionadmin.tb4;
 
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.fail;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -32,10 +33,10 @@ public class PermissionPermissionsControl implements
 		ServiceReference<PermissionAdmin> ref = context
 				.getServiceReference(PermissionAdmin.class);
 		PermissionAdmin	permissionAdmin = ref == null ? null : context.getService(ref);
-		assertNotNull("No Permission Admin", permissionAdmin);
+		assertThat(permissionAdmin).as("No Permission Admin").isNotNull();
 		try {
 			System.out.println(System.getSecurityManager());
-			assertNotNull(System.getSecurityManager());
+			assertThat(System.getSecurityManager()).isNotNull();
 			permissionAdmin.setDefaultPermissions(null);
 			fail("Were able to set default permissions without "
 					+ "admin permission");
@@ -43,13 +44,8 @@ public class PermissionPermissionsControl implements
 		catch (SecurityException e) {
 			// Do nothing; PASS
 		}
-		try {
-			permissionAdmin.setPermissions("fake.jar", null);
-			fail("Were able to set permissions without " + "admin permission");
-		}
-		catch (SecurityException e) {
-			// Do nothing; PASS
-		}
+		assertThatExceptionOfType(SecurityException.class).as("Were able to set permissions without " + "admin permission")
+				.isThrownBy(() -> permissionAdmin.setPermissions("fake.jar", null));
 		/*
 		 * trace("Will try to write to a file"); File f =
 		 * getContext().getDataFile("nicke.txt"); FileOutputStream o = new

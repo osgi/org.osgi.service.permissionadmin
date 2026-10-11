@@ -17,20 +17,29 @@
  *******************************************************************************/
 package org.osgi.test.cases.permissionadmin.junit;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.PropertyPermission;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.osgi.framework.AdaptPermission;
 import org.osgi.framework.AdminPermission;
 import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 import org.osgi.framework.startlevel.FrameworkStartLevel;
 import org.osgi.service.permissionadmin.PermissionAdmin;
 import org.osgi.service.permissionadmin.PermissionInfo;
 import org.osgi.test.cases.permissionadmin.service.PermissionSignatureTBCService;
-import org.osgi.test.support.compatibility.DefaultTestBundleControl;
-import org.osgi.test.support.reflect.MethodCall;
+import org.osgi.test.common.annotation.InjectBundleContext;
+import org.osgi.test.common.annotation.InjectBundleInstaller;
+import org.osgi.test.common.install.BundleInstaller;
 
 /**
  * Contains the test methods of the permission signature test case.
@@ -38,7 +47,13 @@ import org.osgi.test.support.reflect.MethodCall;
  * @author Petia Sotirova
  * @version 1.1
  */
-public class PermissionSignatureTestControl extends DefaultTestBundleControl {
+public class PermissionSignatureTestControl {
+
+	@InjectBundleContext
+	BundleContext		context;
+
+	@InjectBundleInstaller
+	BundleInstaller		installer;
 
 	private PermissionSignatureTBCService	tbc;
 	private PermissionAdmin					permissionAdmin;
@@ -79,13 +94,14 @@ public class PermissionSignatureTestControl extends DefaultTestBundleControl {
 																			"org.osgi.test.*",
 																			"read");
 
-	protected void setUp() throws Exception {
-		assertNotNull("Must have a security manager", System
-				.getSecurityManager());
-		permissionAdmin = getService(PermissionAdmin.class);
-		assertNotNull(permissionAdmin);
+	@BeforeEach
+	public void setUp() throws Exception {
+		assertThat(System
+				.getSecurityManager()).as("Must have a security manager").isNotNull();
+		permissionAdmin = context.getService(serviceReference(PermissionAdmin.class));
+		assertThat(permissionAdmin).isNotNull();
 
-		testBundle = installBundle("tb1.jar", false);
+		testBundle = installer.installBundle(context.getBundle().getEntry("tb1.jar"), false);
 		testBundleLocation = testBundle.getLocation();
 		permissionAdmin.setPermissions(testBundleLocation, null);
 		testBundle.start();
@@ -107,8 +123,8 @@ public class PermissionSignatureTestControl extends DefaultTestBundleControl {
 		extensionBundleName = SignatureResource
 				.getString("extensionBundle.name");
 
-		tbc = getService(PermissionSignatureTBCService.class);
-		FrameworkStartLevel fsl = getContext().getBundle(0).adapt(
+		tbc = context.getService(serviceReference(PermissionSignatureTBCService.class));
+		FrameworkStartLevel fsl = context.getBundle(0).adapt(
 				FrameworkStartLevel.class);
 		startLevel = fsl.getStartLevel();
 		initialBundleStartLevel = fsl.getInitialBundleStartLevel();
@@ -117,25 +133,26 @@ public class PermissionSignatureTestControl extends DefaultTestBundleControl {
 
 		utility = new PermissionSignatureUtility(this, tbc);
 
-		testSignatureBundle = installBundle(signatureBundleName, false);
+		testSignatureBundle = installer.installBundle(context.getBundle().getEntry(signatureBundleName), false);
 		signatureBundleLocation = testSignatureBundle.getLocation();
 		permissionAdmin.setPermissions(signatureBundleLocation, null);
 		testSignatureBundle.start();
 	}
 
-	protected void tearDown() throws Exception {
-		log("#after each run");
+	@AfterEach
+	public void tearDown() throws Exception {
+		System.out.println("#after each run");
 		testSignatureBundle.uninstall();
 		permissionAdmin.setPermissions(signatureBundleLocation, null);
 		testBundle.uninstall();
 		permissionAdmin.setPermissions(testBundleLocation, null);
-		ungetAllServices();
 	}
 
 	/**
 	 * Tests AdminPermission. Checks if a bundle with NoPermission can not
 	 * execute anything that requires AdminPermission.
 	 */
+	@Test
 	public void testPermission() throws Throwable {
 		permissionAdmin.setPermissions(testBundleLocation,
 				new PermissionInfo[0]);
@@ -208,6 +225,7 @@ public class PermissionSignatureTestControl extends DefaultTestBundleControl {
 	 * Tests AdminPermission with all actions allowed on all. Checks if a bundle
 	 * with AllPermission can execute all methods requiring AdminPermission.
 	 */
+	@Test
 	public void testAdminPermission() throws Throwable {
 		PermissionInfo admin = new PermissionInfo(AdminPermission.class
 				.getName(), "*", "*");
@@ -275,6 +293,7 @@ public class PermissionSignatureTestControl extends DefaultTestBundleControl {
 	/**
 	 * Tests AdaptPermission allowed on all.
 	 */
+	@Test
 	public void testAdaptPermission() throws Throwable {
 		PermissionInfo admin = new PermissionInfo(
 				AdminPermission.class.getName(), "*", "*");
@@ -345,6 +364,7 @@ public class PermissionSignatureTestControl extends DefaultTestBundleControl {
 	 * 
 	 * The bundle is specified either by bundle id or by filter string.
 	 */
+	@Test
 	public void testAdminPermissionMetadata() throws Throwable {
 		String message = "";
 		List<PermissionInfo> permissions = utility.getPInfosForAdminPermisssion(
@@ -420,6 +440,7 @@ public class PermissionSignatureTestControl extends DefaultTestBundleControl {
 	 * 
 	 * The bundle is specified either by bundle id or by filter string.
 	 */
+	@Test
 	public void testAdminPermissionResource() throws Throwable {
 		String message = "";
 		List<PermissionInfo> permissions = utility.getPInfosForAdminPermisssion(
@@ -521,6 +542,7 @@ public class PermissionSignatureTestControl extends DefaultTestBundleControl {
 	 * 
 	 * The bundle is specified either by bundle id or by filter string.
 	 */
+	@Test
 	public void testAdminPermissionClass() throws Throwable {
 		String message = "";
 		List<PermissionInfo> permissions = utility.getPInfosForAdminPermisssion(
@@ -622,6 +644,7 @@ public class PermissionSignatureTestControl extends DefaultTestBundleControl {
 	 * 
 	 * The bundle is specified either by bundle id or by filter string.
 	 */
+	@Test
 	public void testAdminPermissionLifecycle() throws Throwable {
 		String message = "";
 		List<PermissionInfo> permissions = utility.getPInfosForAdminPermisssion(
@@ -700,6 +723,7 @@ public class PermissionSignatureTestControl extends DefaultTestBundleControl {
 	 * 
 	 * The bundle is specified either by bundle id or by filter string.
 	 */
+	@Test
 	public void testAdminPermissionExtensionLifecycle() throws Throwable {
 		String message = "";
 		String extensionBundleLocation = getInstallBundleLocation(extensionBundleName);
@@ -794,6 +818,7 @@ public class PermissionSignatureTestControl extends DefaultTestBundleControl {
 	 * 
 	 * The bundle is specified either by bundle id or by filter string.
 	 */
+	@Test
 	public void testAdminPermissionExecute() throws Throwable {
 		String message = "";
 		List<PermissionInfo> permissions = utility.getPInfosForAdminPermisssion(
@@ -894,6 +919,7 @@ public class PermissionSignatureTestControl extends DefaultTestBundleControl {
 	 * 
 	 * The bundle is specified either by bundle id or by filter string.
 	 */
+	@Test
 	public void testAdminPermissionListener() throws Throwable {
 		String message = "";
 		List<PermissionInfo> permissions = utility.getPInfosForAdminPermisssion(
@@ -979,6 +1005,7 @@ public class PermissionSignatureTestControl extends DefaultTestBundleControl {
 	 * 
 	 * The bundle is specified either by bundle id or by filter string.
 	 */
+	@Test
 	public void testAdminPermissionResolve() throws Throwable {
 		String message = "";
 		List<PermissionInfo> permissions = utility.getPInfosForAdminPermisssion(
@@ -1078,6 +1105,7 @@ public class PermissionSignatureTestControl extends DefaultTestBundleControl {
 	 * 
 	 * The bundle is specified either by bundle id or by filter string.
 	 */
+	@Test
 	public void testAdminPermissionStartlevel() throws Throwable {
 		if (!checkStartLevelService) {
 			return; // this method shall not be excecuted - no StartLevel
@@ -1174,28 +1202,30 @@ public class PermissionSignatureTestControl extends DefaultTestBundleControl {
 	}
 
 	// returns true if 'method' failed
-	boolean not_allowed_call(String message, String methodName,
-			Class< ? >[] paramClasses, Object[] paramObjects,
+	/** A call on the test bundle's service, made under its current permissions. */
+	@FunctionalInterface
+	interface TbcCall {
+		Object call(PermissionSignatureTBCService tbc) throws Throwable;
+	}
+
+	boolean not_allowed_call(String message, TbcCall call,
 			Class< ? extends Throwable> wanted)
 			throws Exception {
 		try {
-			MethodCall method = new MethodCall(null, methodName, paramClasses);
-			method.invoke(tbc, paramObjects);
+			call.call(tbc);
 		}
 		catch (Throwable e) {
-			assertException(message, wanted, e);
+			assertThat(e).as(message).isInstanceOf(wanted);
 			return true;
 		}
-		failException(message, wanted);
+		fail(message + " expected:[" + wanted.getName() + "] and got nothing");
 		return false;
 	}
 
-	boolean not_allowed_call_assertNull(String message, String methodName,
-			Class< ? >[] paramClasses, Object[] paramObjects) throws Throwable {
-		MethodCall method = new MethodCall(null, methodName, paramClasses);
-		Object result = method.invoke(tbc, paramObjects);
+	boolean not_allowed_call_assertNull(String message, TbcCall call) throws Throwable {
+		Object result = call.call(tbc);
 		if (result == null) {
-			pass(message + " and correctly returns null");
+			System.out.println(message + " and correctly returns null");
 			return true;
 		}
 		else {
@@ -1204,26 +1234,22 @@ public class PermissionSignatureTestControl extends DefaultTestBundleControl {
 		}
 	}
 
-	boolean allowed_call_assertNotNull(String message, String methodName,
-			Class< ? >[] paramClasses, Object[] paramObjects) throws Throwable {
-		MethodCall method = new MethodCall(null, methodName, paramClasses);
-		Object result = method.invoke(tbc, paramObjects);
+	boolean allowed_call_assertNotNull(String message, TbcCall call) throws Throwable {
+		Object result = call.call(tbc);
 		if (result == null) {
 			fail(message + " but returns null");
 			return false;
 		}
 		else {
-			pass(message + " and correctly returns not null");
+			System.out.println(message + " and correctly returns not null");
 			return true;
 		}
 	}
 
-	Object allowed_call(String message, String methodName,
-			Class< ? >[] paramClasses, Object[] paramObjects) {
+	Object allowed_call(String message, TbcCall call) {
 		try {
-			MethodCall method = new MethodCall(null, methodName, paramClasses);
-			Object result = method.invoke(tbc, paramObjects);
-			pass(message);
+			Object result = call.call(tbc);
+			System.out.println(message);
 			return result;
 		}
 		catch (Throwable e) {
@@ -1239,21 +1265,28 @@ public class PermissionSignatureTestControl extends DefaultTestBundleControl {
 	private void printPermissions(String bundleLocation) {
 		PermissionInfo[] pi = permissionAdmin.getPermissions(bundleLocation);
 		if ((pi == null) || (pi.length == 0)) {
-			log("No permissions for " + bundleLocation);
+			System.out.println("No permissions for " + bundleLocation);
 			return;
 		}
-		log("Permissions for " + bundleLocation);
+		System.out.println("Permissions for " + bundleLocation);
 		for (int j = 0; j < pi.length; ++j) {
-			log(pi[j].toString());
+			System.out.println(pi[j].toString());
 		}
 	}
 
 	private String getInstallBundleLocation(String bundleName) {
-		return getWebServer() + bundleName;
+		return context.getBundle().getEntry("/").toExternalForm() + bundleName;
 	}
 
 	private boolean serviceAvailable(String clazz) {
-		return getContext().getServiceReference(clazz) != null;
+		return context.getServiceReference(clazz) != null;
 	}
 
+	private <S> ServiceReference<S> serviceReference(Class<S> clazz) {
+		ServiceReference<S> ref = context.getServiceReference(clazz);
+		assertThat(ref)
+				.as("Can't get service reference for " + clazz.getName())
+				.isNotNull();
+		return ref;
+	}
 }

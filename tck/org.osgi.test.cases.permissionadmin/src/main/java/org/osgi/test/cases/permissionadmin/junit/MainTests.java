@@ -17,55 +17,71 @@
  *******************************************************************************/
 package org.osgi.test.cases.permissionadmin.junit;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+
 import java.io.FilePermission;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.permissionadmin.PermissionAdmin;
 import org.osgi.service.permissionadmin.PermissionInfo;
 import org.osgi.test.cases.permissionadmin.service.ContextSharer;
-import org.osgi.test.support.compatibility.DefaultTestBundleControl;
+import org.osgi.test.common.annotation.InjectBundleContext;
+import org.osgi.test.common.annotation.InjectBundleInstaller;
+import org.osgi.test.common.install.BundleInstaller;
 
-public class MainTests extends DefaultTestBundleControl {
+public class MainTests {
 
-	protected void setUp() throws Exception {
-		assertNotNull("Must have a security manager", System
-				.getSecurityManager());
+	@InjectBundleContext
+	BundleContext		context;
+
+	@InjectBundleInstaller
+	BundleInstaller		installer;
+
+	@BeforeEach
+	public void setUp() throws Exception {
+		assertThat(System
+				.getSecurityManager()).as("Must have a security manager").isNotNull();
 	}
 
-	protected void tearDown() {
-		ungetAllServices();
+	@AfterEach
+	public void tearDown() {
 	}
 
 	/** *** Test methods **** */
+	@Test
 	public void testBasicPermissionInfo() throws Exception {
 		/* Construct a permissioninfo from a permission class */
 		PermissionInfo permInfo = new PermissionInfo(FilePermission.class
 				.getName(), "<<ALL FILES>>", "read");
-		assertEquals("Actions", "read", permInfo.getActions());
-		assertEquals("Name", "<<ALL FILES>>", permInfo.getName());
-		assertEquals("Type", "java.io.FilePermission", permInfo.getType());
+		assertThat(permInfo.getActions()).as("Actions").isEqualTo("read");
+		assertThat(permInfo.getName()).as("Name").isEqualTo("<<ALL FILES>>");
+		assertThat(permInfo.getType()).as("Type").isEqualTo("java.io.FilePermission");
 		/* Check the output of getEncoded() */
-		assertEquals("getEncoded",
-				"(java.io.FilePermission \"<<ALL FILES>>\" \"read\")", permInfo
-						.getEncoded());
+		assertThat(permInfo
+						.getEncoded()).as("getEncoded").isEqualTo("(java.io.FilePermission \"<<ALL FILES>>\" \"read\")");
 		/* toString() should be identical with getEncoded() */
-		assertEquals("toString", permInfo.getEncoded(), permInfo.toString());
+		assertThat(permInfo.toString()).as("toString").isEqualTo(permInfo.getEncoded());
 	}
 
+	@Test
 	public void testEqual() throws Exception {
 		/* Construct an identical permissionInfo and check equal */
 		PermissionInfo permInfo = new PermissionInfo(FilePermission.class
 				.getName(), "<<ALL FILES>>", "read");
 		PermissionInfo identicalPermInfo = new PermissionInfo(
 				FilePermission.class.getName(), "<<ALL FILES>>", "read");
-		assertEquals("identical", permInfo, identicalPermInfo);
-		assertEquals("identical hashcodes", permInfo.hashCode(),
-				identicalPermInfo.hashCode());
+		assertThat(identicalPermInfo).as("identical").isEqualTo(permInfo);
+		assertThat(identicalPermInfo.hashCode()).as("identical hashcodes").isEqualTo(permInfo.hashCode());
 		/* Construct another permissionInfo, not identical and check equal */
 		PermissionInfo unIdenticalPermInfo = new PermissionInfo(
 				FilePermission.class.getName(), "<<ALL FILES>>", "write");
@@ -73,9 +89,10 @@ public class MainTests extends DefaultTestBundleControl {
 		 * QUESTION: Is this test relevant? Should there be an assert for
 		 * notEqual?
 		 */
-		assertTrue("not identical", !permInfo.equals(unIdenticalPermInfo));
+		assertThat(!permInfo.equals(unIdenticalPermInfo)).as("not identical").isTrue();
 	}
 
+	@Test
 	public void testEncodedPermission() throws Exception {
 		/*
 		 * Check if permissioninfos created from encoded are identical to the
@@ -89,9 +106,8 @@ public class MainTests extends DefaultTestBundleControl {
 		/* Construct a normal permission info */
 		PermissionInfo identicalPermInfo = new PermissionInfo(
 				FilePermission.class.getName(), "<<ALL FILES>>", "read");
-		assertEquals("constructed from a string", stringPermInfo,
-				identicalPermInfo);
-		assertEquals("toString", stringEncodedPermInfo, permInfo.toString());
+		assertThat(identicalPermInfo).as("constructed from a string").isEqualTo(stringPermInfo);
+		assertThat(permInfo.toString()).as("toString").isEqualTo(stringEncodedPermInfo);
 	}
 
 	/**
@@ -99,6 +115,7 @@ public class MainTests extends DefaultTestBundleControl {
 	 * encoded string. WARNING! Many of these tests checks things that are not
 	 * well defined in the current spec!
 	 */
+	@Test
 	public void testExceptionalPermissionInfo() throws Exception {
 		/* !!! This is not explicitly specified in the spec */
 		createBadPermissionInfo("null argument", null,
@@ -148,6 +165,7 @@ public class MainTests extends DefaultTestBundleControl {
 	 * PermissionInfo objects. WARNING! Many of these tests checks things that
 	 * are not well defined in the current spec!
 	 */
+	@Test
 	public void testPermissionInfo() throws Exception {
 		PermissionInfo info = null;
 		/* Test constructor with null type */
@@ -161,65 +179,64 @@ public class MainTests extends DefaultTestBundleControl {
 				NullPointerException.class);
 		/* Test constructor with null name and actions arguments */
 		info = new PermissionInfo("java.io.FilePermission", null, null);
-		assertEquals("type", "java.io.FilePermission", info.getType());
-		assertNull("no name", info.getName());
-		assertNull("no actions", info.getActions());
-		assertEquals("encoded", "(java.io.FilePermission)", info.getEncoded());
-		assertEquals("toString", "(java.io.FilePermission)", info.toString());
-		pass("hashcode " + info.hashCode());
+		assertThat(info.getType()).as("type").isEqualTo("java.io.FilePermission");
+		assertThat(info.getName()).as("no name").isNull();
+		assertThat(info.getActions()).as("no actions").isNull();
+		assertThat(info.getEncoded()).as("encoded").isEqualTo("(java.io.FilePermission)");
+		assertThat(info.toString()).as("toString").isEqualTo("(java.io.FilePermission)");
+		System.out.println("hashcode " + info.hashCode());
 		/* Test constructor with null actions argument */
 		info = new PermissionInfo("java.io.FilePermission", "<<ALL FILES>>",
 				null);
-		assertEquals("type", "java.io.FilePermission", info.getType());
-		assertEquals("name", "<<ALL FILES>>", info.getName());
-		assertNull("no actions", info.getActions());
-		assertEquals("encoded", "(java.io.FilePermission \"<<ALL FILES>>\")",
-				info.getEncoded());
-		assertEquals("toString", "(java.io.FilePermission \"<<ALL FILES>>\")",
-				info.toString());
-		pass("hashcode " + info.hashCode());
+		assertThat(info.getType()).as("type").isEqualTo("java.io.FilePermission");
+		assertThat(info.getName()).as("name").isEqualTo("<<ALL FILES>>");
+		assertThat(info.getActions()).as("no actions").isNull();
+		assertThat(info.getEncoded()).as("encoded").isEqualTo("(java.io.FilePermission \"<<ALL FILES>>\")");
+		assertThat(info.toString()).as("toString").isEqualTo("(java.io.FilePermission \"<<ALL FILES>>\")");
+		System.out.println("hashcode " + info.hashCode());
 		/* Test constructor with missing name argument */
 		createBadPermissionInfo("missing name", "java.io.FilePermission", null,
 				"read", IllegalArgumentException.class);
 		/* Test constructor with no null arguments */
 		info = new PermissionInfo("java.io.FilePermission", "<<ALL FILES>>",
 				"read");
-		assertEquals("type", "java.io.FilePermission", info.getType());
-		assertEquals("name", "<<ALL FILES>>", info.getName());
-		assertEquals("actions", "read", info.getActions());
-		assertEquals("encoded",
-				"(java.io.FilePermission \"<<ALL FILES>>\" \"read\")", info
-						.getEncoded());
-		assertEquals("toString",
-				"(java.io.FilePermission \"<<ALL FILES>>\" \"read\")", info
-						.toString());
-		pass("hashcode " + info.hashCode());
+		assertThat(info.getType()).as("type").isEqualTo("java.io.FilePermission");
+		assertThat(info.getName()).as("name").isEqualTo("<<ALL FILES>>");
+		assertThat(info.getActions()).as("actions").isEqualTo("read");
+		assertThat(info
+						.getEncoded()).as("encoded").isEqualTo("(java.io.FilePermission \"<<ALL FILES>>\" \"read\")");
+		assertThat(info
+						.toString()).as("toString").isEqualTo("(java.io.FilePermission \"<<ALL FILES>>\" \"read\")");
+		System.out.println("hashcode " + info.hashCode());
 	}
 
 	/**
 	 * Makes sure that Bundle 0 (system bundle) is the one that registered the
 	 * PermissionAdmin service.
 	 */
+	@Test
 	public void testBundleZero() throws Exception {
-		ServiceReference<PermissionAdmin> serviceRef = getContext()
+		ServiceReference<PermissionAdmin> serviceRef = context
 				.getServiceReference(PermissionAdmin.class);
 		Bundle bundle = serviceRef.getBundle();
-		assertEquals("Bundle that registered PermissionAdmin", 0L, bundle
-				.getBundleId());
+		assertThat(bundle
+				.getBundleId()).as("Bundle that registered PermissionAdmin").isZero();
 	}
 
 	/**
 	 * thereCanBeonlyOne. Test that there is only one permission admin
 	 */
+	@Test
 	public void testThereCanBeOnlyOne() throws Exception {
 		/* Get the references to all permissions admins */
-		Collection<ServiceReference<PermissionAdmin>> serviceRefs = getContext()
+		Collection<ServiceReference<PermissionAdmin>> serviceRefs = context
 				.getServiceReferences(PermissionAdmin.class, null);
-		assertEquals("only one PermissionAdmin", 1, serviceRefs.size());
+		assertThat(serviceRefs).as("only one PermissionAdmin").hasSize(1);
 	}
 
 	/**	
 	 */
+	@Test
 	public void testImplicitPermissions() throws Throwable {
 		PermissionInfo[] invokePerm = {new PermissionInfo(
 				"java.security.AllPermission", "", "")};
@@ -228,8 +245,9 @@ public class MainTests extends DefaultTestBundleControl {
 		invokeWithPermissions("implicitPermissionsTest", invokePerm, true);
 	}
 
+	@Test
 	public void testNoPermissions() throws Throwable {
-		Bundle tb4 = installBundle("tb4.jar", false);
+		Bundle tb4 = installer.installBundle(context.getBundle().getEntry("tb4.jar"), false);
 		try {
 			tb4.start();
 		}
@@ -243,25 +261,25 @@ public class MainTests extends DefaultTestBundleControl {
 
 	/* called by testImplicitPermissions */
 	public void implicitPermissionsTest() throws Exception {
-		getContext().getBundle().getBundleContext().getDataFile("nicke.txt");
+		context.getBundle().getBundleContext().getDataFile("nicke.txt");
 	}
 
 	private void invokeWithPermissions(String methodName,
 			PermissionInfo[] perms, boolean fail) throws Throwable {
 		/* Install and start the context sharing bundle */
-		Bundle contextBundle = installBundle("contextsharer.jar", true);
+		Bundle contextBundle = installer.installBundle(context.getBundle().getEntry("contextsharer.jar"), true);
 		try {
 			String contextBundleLocation = contextBundle.getLocation();
 
 			/* Get the context sharing service */
-			ServiceReference<ContextSharer> sr = getContext()
+			ServiceReference<ContextSharer> sr = context
 					.getServiceReference(ContextSharer.class);
-			ContextSharer cs = getContext().getService(sr);
+			ContextSharer cs = context.getService(sr);
 
 			/* Get the PermissionAdmin service */
-			ServiceReference<PermissionAdmin> paRef = getContext()
+			ServiceReference<PermissionAdmin> paRef = context
 					.getServiceReference(PermissionAdmin.class);
-			PermissionAdmin pa = getContext().getService(
+			PermissionAdmin pa = context.getService(
 					paRef);
 
 			/* Set the permissions for the context sharing bundle */
@@ -312,7 +330,7 @@ public class MainTests extends DefaultTestBundleControl {
 			fail(message + " did not result in a " + exceptionClass.getName());
 		}
 		catch (Exception e) {
-			assertException(message, exceptionClass, e);
+			assertThat(e).as(message).isInstanceOf(exceptionClass);
 		}
 	}
 
@@ -328,7 +346,7 @@ public class MainTests extends DefaultTestBundleControl {
 			fail(message + " did not result in a " + exceptionClass.getName());
 		}
 		catch (Exception e) {
-			assertException(message, exceptionClass, e);
+			assertThat(e).as(message).isInstanceOf(exceptionClass);
 		}
 	}
 
