@@ -51,672 +51,357 @@ public class PermissionSignatureUtility {
 	// returns true if 'method' succeed
 	public Object allowed_Bundle_getHeaders(String message, Bundle bundle)
 			throws Exception {
-		return control.allowed_call("call Bundle.getHeaders() " + message,
-				"callBundle_getHeaders", new Class[] {Bundle.class},
-				new Object[] {bundle});
+		return control.allowed_call("call Bundle.getHeaders() " + message, tbc -> tbc.callBundle_getHeaders(bundle));
 	}
 
 	// returns true if 'method' failed
 	public boolean not_allowed_Bundle_getHeaders(String message, Bundle bundle)
 			throws Exception {
-		return control.not_allowed_call("call Bundle.getHeaders() " + message,
-				"callBundle_getHeaders", new Class[] {Bundle.class},
-				new Object[] {bundle}, SecurityException.class);
+		return control.not_allowed_call("call Bundle.getHeaders() " + message, tbc -> tbc.callBundle_getHeaders(bundle), SecurityException.class);
 	}
 
 	public Object allowed_Bundle_getHeaders_byLocation(String message,
 			Bundle bundle) throws Exception {
-		return control.allowed_call(
-				"call Bundle.getHeaders(String) " + message,
-				"callBundle_getHeaders", new Class[] {Bundle.class,
-						String.class}, new Object[] {bundle, null});
+		return control.allowed_call("call Bundle.getHeaders(String) " + message, tbc -> tbc.callBundle_getHeaders(bundle, (String) null));
 	}
 
 	public boolean not_allowed_Bundle_getHeaders_byLocation(String message,
 			Bundle bundle) throws Exception {
 		return control.not_allowed_call("call Bundle.getHeaders(String) "
-				+ message, "callBundle_getHeaders", new Class[] {Bundle.class,
-				String.class}, new Object[] {bundle, null},
-				SecurityException.class);
+				+ message, tbc -> tbc.callBundle_getHeaders(bundle, (String) null), SecurityException.class);
 	}
 
 	public Object allowed_Bundle_getLocation(String message, Bundle bundle)
 			throws Exception {
-		return control.allowed_call("call Bundle.getLocation() " + message,
-				"callBundle_getLocation", new Class[] {Bundle.class},
-				new Object[] {bundle});
+		return control.allowed_call("call Bundle.getLocation() " + message, tbc -> tbc.callBundle_getLocation(bundle));
 	}
 
 	public boolean not_allowed_Bundle_getLocation(String message, Bundle bundle)
 			throws Exception {
-		return control.not_allowed_call("call Bundle.getLocation() " + message,
-				"callBundle_getLocation", new Class[] {Bundle.class},
-				new Object[] {bundle}, SecurityException.class);
+		return control.not_allowed_call("call Bundle.getLocation() " + message, tbc -> tbc.callBundle_getLocation(bundle), SecurityException.class);
 	}
 
 	// if not ok returns null, not java.lang.SecurityException
 	public boolean allowed_Bundle_getResource(String message, Bundle bundle,
 			String name) throws Throwable {
-		return control.allowed_call_assertNotNull(
-				"call Bundle.getResource(String) " + message,
-				"callBundle_getResource", new Class[] {Bundle.class,
-						String.class}, new Object[] {bundle, name});
+		return control.allowed_call_assertNotNull("call Bundle.getResource(String) " + message, tbc -> tbc.callBundle_getResource(bundle, name));
 	}
 
 	// if not ok returns null, not java.lang.SecurityException
 	public boolean not_allowed_Bundle_getResource(String message,
 			Bundle bundle, String name) throws Throwable {
-		return control.not_allowed_call_assertNull(
-				"call Bundle.getResource(String) " + message,
-				"callBundle_getResource", new Class[] {Bundle.class,
-						String.class}, new Object[] {bundle, name});
+		return control.not_allowed_call_assertNull("call Bundle.getResource(String) " + message, tbc -> tbc.callBundle_getResource(bundle, name));
 	}
 
 	// if not ok returns null, not java.lang.SecurityException
 	public boolean allowed_Bundle_getResources(String message, Bundle bundle,
 			String name) throws Throwable {
-		return control.allowed_call_assertNotNull(
-				"call Bundle.getResources(String) " + message,
-				"callBundle_getResources", new Class[] {Bundle.class,
-						String.class}, new Object[] {bundle, name});
+		return control.allowed_call_assertNotNull("call Bundle.getResources(String) " + message, tbc -> tbc.callBundle_getResources(bundle, name));
 	}
 
 	// if not ok returns null, not java.lang.SecurityException
 	public boolean not_allowed_Bundle_getResources(String message,
 			Bundle bundle, String name) throws Throwable {
-		return control.not_allowed_call_assertNull(
-				"call Bundle.getResources(String) " + message,
-				"callBundle_getResources", new Class[] {Bundle.class,
-						String.class}, new Object[] {bundle, name});
+		return control.not_allowed_call_assertNull("call Bundle.getResources(String) " + message, tbc -> tbc.callBundle_getResources(bundle, name));
 	}
 
 	// if not ok returns null, not java.lang.SecurityException
 	public boolean allowed_Bundle_getEntry(String message, Bundle bundle,
 			String name) throws Throwable {
-		return control.allowed_call_assertNotNull(
-				"call Bundle.getEntry(String) " + message,
-				"callBundle_getEntry",
-				new Class[] {Bundle.class, String.class}, new Object[] {bundle,
-						name});
+		return control.allowed_call_assertNotNull("call Bundle.getEntry(String) " + message, tbc -> tbc.callBundle_getEntry(bundle, name));
 	}
 
 	// if not ok returns null, not java.lang.SecurityException
 	public boolean not_allowed_Bundle_getEntry(String message, Bundle bundle,
 			String name) throws Throwable {
-		return control.not_allowed_call_assertNull(
-				"call Bundle.getEntry(String) " + message,
-				"callBundle_getEntry",
-				new Class[] {Bundle.class, String.class}, new Object[] {bundle,
-						name});
+		return control.not_allowed_call_assertNull("call Bundle.getEntry(String) " + message, tbc -> tbc.callBundle_getEntry(bundle, name));
 	}
 
 	// if not ok returns null, not java.lang.SecurityException
 	public boolean allowed_Bundle_getEntryPaths(String message, Bundle bundle,
 			String name) throws Throwable {
-		return control.allowed_call_assertNotNull(
-				"call Bundle.getEntryPaths(String) " + message,
-				"callBundle_getEntryPaths", new Class[] {Bundle.class,
-						String.class}, new Object[] {bundle, name});
+		return control.allowed_call_assertNotNull("call Bundle.getEntryPaths(String) " + message, tbc -> tbc.callBundle_getEntryPaths(bundle, name));
 	}
 
 	// if not ok returns null, not java.lang.SecurityException
 	public boolean not_allowed_Bundle_getEntryPaths(String message,
 			Bundle bundle, String name) throws Throwable {
-		return control.not_allowed_call_assertNull(
-				"call Bundle.getEntryPaths(String) " + message,
-				"callBundle_getEntryPaths", new Class[] {Bundle.class,
-						String.class}, new Object[] {bundle, name});
+		return control.not_allowed_call_assertNull("call Bundle.getEntryPaths(String) " + message, tbc -> tbc.callBundle_getEntryPaths(bundle, name));
 	}
 
 	public Object allowed_Bundle_loadClass(String message, Bundle bundle,
 			String name) throws Exception {
-		return control.allowed_call("call Bundle.loadClass(String) " + message,
-				"callBundle_loadClass",
-				new Class[] {Bundle.class, String.class}, new Object[] {bundle,
-						name});
+		return control.allowed_call("call Bundle.loadClass(String) " + message, tbc -> tbc.callBundle_loadClass(bundle, name));
 	}
 
 	public boolean not_allowed_Bundle_loadClass(String message, Bundle bundle,
 			String name) throws Exception {
 		return control.not_allowed_call("call Bundle.loadClass(String) "
-				+ message, "callBundle_loadClass", new Class[] {Bundle.class,
-				String.class}, new Object[] {bundle, name},
-				java.lang.ClassNotFoundException.class);
+				+ message, tbc -> tbc.callBundle_loadClass(bundle, name), java.lang.ClassNotFoundException.class);
 	}
 
 	public Object allowed_Bundle_stop(String message, Bundle bundle)
 			throws Exception {
-		return control.allowed_call("call Bundle.stop() " + message,
-				"callBundle_stop", new Class[] {Bundle.class},
-				new Object[] {bundle});
+		return control.allowed_call("call Bundle.stop() " + message, tbc -> { tbc.callBundle_stop(bundle); return null; });
 	}
 
 	public boolean not_allowed_Bundle_stop(String message, Bundle bundle)
 			throws Exception {
-		return control.not_allowed_call("call Bundle.stop() " + message,
-				"callBundle_stop", new Class[] {Bundle.class},
-				new Object[] {bundle}, SecurityException.class);
+		return control.not_allowed_call("call Bundle.stop() " + message, tbc -> { tbc.callBundle_stop(bundle); return null; }, SecurityException.class);
 	}
 
 	public Object allowed_Bundle_uninstall(String message, Bundle bundle)
 			throws Exception {
-		return control.allowed_call("call Bundle.uninstall() " + message,
-				"callBundle_uninstall", new Class[] {Bundle.class},
-				new Object[] {bundle});
+		return control.allowed_call("call Bundle.uninstall() " + message, tbc -> { tbc.callBundle_uninstall(bundle); return null; });
 	}
 
 	public boolean not_allowed_Bundle_uninstall(String message, Bundle bundle)
 			throws Exception {
-		return control.not_allowed_call("call Bundle.uninstall() " + message,
-				"callBundle_uninstall", new Class[] {Bundle.class},
-				new Object[] {bundle}, SecurityException.class);
+		return control.not_allowed_call("call Bundle.uninstall() " + message, tbc -> { tbc.callBundle_uninstall(bundle); return null; }, SecurityException.class);
 	}
 
 	public Object allowed_Bundle_update(String message, Bundle bundle)
 			throws Exception {
-		return control.allowed_call("call Bundle.update() " + message,
-				"callBundle_update", new Class[] {Bundle.class},
-				new Object[] {bundle});
+		return control.allowed_call("call Bundle.update() " + message, tbc -> { tbc.callBundle_update(bundle); return null; });
 	}
 
 	public boolean not_allowed_Bundle_update(String message, Bundle bundle)
 			throws Exception {
-		return control.not_allowed_call("call Bundle.update() " + message,
-				"callBundle_update", new Class[] {Bundle.class},
-				new Object[] {bundle}, SecurityException.class);
+		return control.not_allowed_call("call Bundle.update() " + message, tbc -> { tbc.callBundle_update(bundle); return null; }, SecurityException.class);
 	}
 
 	public Object allowed_Bundle_update_by_InputStream(String message,
 			Bundle bundle, InputStream is) throws Exception {
 		return control.allowed_call("call Bundle.update(InputStream) "
-				+ message, "callBundle_update", new Class[] {Bundle.class,
-				InputStream.class}, new Object[] {bundle, is});
+				+ message, tbc -> { tbc.callBundle_update(bundle, is); return null; });
 	}
 
 	public boolean not_allowed_Bundle_update_by_InputStream(String message,
 			Bundle bundle, InputStream is) throws Exception {
 		return control.not_allowed_call("call Bundle.update(InputStream) "
-				+ message, "callBundle_update", new Class[] {Bundle.class,
-				InputStream.class}, new Object[] {bundle, is},
-				SecurityException.class);
+				+ message, tbc -> { tbc.callBundle_update(bundle, is); return null; }, SecurityException.class);
 	}
 
 	public Object allowed_Bundle_start(String message, Bundle bundle)
 			throws Exception {
-		return control.allowed_call("call Bundle.start() " + message,
-				"callBundle_start", new Class[] {Bundle.class},
-				new Object[] {bundle});
+		return control.allowed_call("call Bundle.start() " + message, tbc -> { tbc.callBundle_start(bundle); return null; });
 	}
 
 	public boolean not_allowed_Bundle_start(String message, Bundle bundle)
 			throws Exception {
-		return control.not_allowed_call("call Bundle.start() " + message,
-				"callBundle_start", new Class[] {Bundle.class},
-				new Object[] {bundle}, SecurityException.class);
+		return control.not_allowed_call("call Bundle.start() " + message, tbc -> { tbc.callBundle_start(bundle); return null; }, SecurityException.class);
 	}
 
 	public Object allowed_BundleContext_installBundle(String message,
 			Bundle bundle, String location) throws Exception {
 		return control.allowed_call("call BundleContext.installBundle(String) "
-				+ message, "callBundleContext_installBundle", new Class[] {
-				BundleContext.class, String.class}, new Object[] {
-				bundle.getBundleContext(), location});
+				+ message, tbc -> tbc.callBundleContext_installBundle(bundle.getBundleContext(), location));
 	}
 
 	public boolean not_allowed_BundleContext_installBundle(String message,
 			Bundle bundle,
 			String location) throws Exception {
-		return control.not_allowed_call(
-				"call BundleContext.installBundle(String) " + message,
-				"callBundleContext_installBundle", new Class[] {
-						BundleContext.class, String.class}, new Object[] {
-						bundle.getBundleContext(), location},
-				SecurityException.class);
+		return control.not_allowed_call("call BundleContext.installBundle(String) " + message, tbc -> tbc.callBundleContext_installBundle(bundle.getBundleContext(), location), SecurityException.class);
 	}
 
 	public Object allowed_BundleContext_installBundle_by_InputStream(
 			String message, Bundle bundle, String location, InputStream is)
 			throws Exception {
-		return control.allowed_call(
-				"call BundleContext.installBundle(String, InputStream) "
-						+ message, "callBundleContext_installBundle",
-				new Class[] {BundleContext.class, String.class,
-						InputStream.class},
- new Object[] {
-						bundle.getBundleContext(), location, is});
+		return control.allowed_call("call BundleContext.installBundle(String, InputStream) "
+						+ message, tbc -> tbc.callBundleContext_installBundle(bundle.getBundleContext(), location, is));
 	}
 
 	public boolean not_allowed_BundleContext_installBundle_by_InputStream(
 			String message, Bundle bundle, String location, InputStream is)
 			throws Exception {
-		return control.not_allowed_call(
-				"call BundleContext.installBundle(String, InputStream) "
-						+ message, "callBundleContext_installBundle",
-				new Class[] {BundleContext.class, String.class,
-						InputStream.class},
- new Object[] {
-						bundle.getBundleContext(), location, is},
-				SecurityException.class);
+		return control.not_allowed_call("call BundleContext.installBundle(String, InputStream) "
+						+ message, tbc -> tbc.callBundleContext_installBundle(bundle.getBundleContext(), location, is), SecurityException.class);
 	}
 
 	public Object allowed_BundleContext_addBundleListener(String message,
 			Bundle bundle)
 			throws Exception {
-		return control.allowed_call(
-				"call BundleContext.addBundleListener(SynchronousBundleListener) "
-						+ message, "callBundleContext_addBundleListener",
-				new Class[] {BundleContext.class}, new Object[] {bundle
-						.getBundleContext()});
+		return control.allowed_call("call BundleContext.addBundleListener(SynchronousBundleListener) "
+						+ message, tbc -> { tbc.callBundleContext_addBundleListener(bundle
+						.getBundleContext()); return null; });
 	}
 
 	public boolean not_allowed_BundleContext_addBundleListener(String message,
 			Bundle bundle)
 			throws Exception {
-		return control.not_allowed_call(
-				"call BundleContext.addBundleListener(SynchronousBundleListener) "
-						+ message, "callBundleContext_addBundleListener",
-				new Class[] {BundleContext.class}, new Object[] {bundle
-						.getBundleContext()},
-				SecurityException.class);
+		return control.not_allowed_call("call BundleContext.addBundleListener(SynchronousBundleListener) "
+						+ message, tbc -> { tbc.callBundleContext_addBundleListener(bundle
+						.getBundleContext()); return null; }, SecurityException.class);
 	}
 
 	public Object allowed_BundleContext_removeBundleListener(String message,
 			Bundle bundle)
 			throws Exception {
-		return control.allowed_call(
-				"call BundleContext.removeBundleListener(SynchronousBundleListener) "
-						+ message, "callBundleContext_removeBundleListener",
-				new Class[] {BundleContext.class}, new Object[] {bundle
-						.getBundleContext()});
+		return control.allowed_call("call BundleContext.removeBundleListener(SynchronousBundleListener) "
+						+ message, tbc -> { tbc.callBundleContext_removeBundleListener(bundle
+						.getBundleContext()); return null; });
 	}
 
 	public boolean not_allowed_BundleContext_removeBundleListener(
 			String message, Bundle bundle)
 			throws Exception {
-		return control.not_allowed_call(
-				"call BundleContext.removeBundleListener(SynchronousBundleListener) "
-						+ message, "callBundleContext_removeBundleListener",
-				new Class[] {BundleContext.class}, new Object[] {bundle
-						.getBundleContext()},
-				SecurityException.class);
+		return control.not_allowed_call("call BundleContext.removeBundleListener(SynchronousBundleListener) "
+						+ message, tbc -> { tbc.callBundleContext_removeBundleListener(bundle
+						.getBundleContext()); return null; }, SecurityException.class);
 	}
 
 	public Object allowed_StartLevel_setBundleStartLevel(String message,
 			Bundle bundle, int startlevel) throws Exception {
-		return control.allowed_call(
-				"call StartLevel.setBundleStartLevel(Bundle, int) " + message,
-				"callStartLevel_setBundleStartLevel", new Class[] {
-						Bundle.class, Integer.class}, new Object[] {bundle,
-						Integer.valueOf(startlevel)});
+		return control.allowed_call("call StartLevel.setBundleStartLevel(Bundle, int) " + message, tbc -> { tbc.callStartLevel_setBundleStartLevel(bundle, Integer.valueOf(startlevel)); return null; });
 	}
 
 	public boolean not_allowed_StartLevel_setBundleStartLevel(String message,
 			Bundle bundle, int startlevel) throws Exception {
-		return control.not_allowed_call(
-				"call StartLevel.setBundleStartLevel(Bundle, int) " + message,
-				"callStartLevel_setBundleStartLevel", new Class[] {
-						Bundle.class, Integer.class}, new Object[] {bundle,
-						Integer.valueOf(startlevel)}, SecurityException.class);
+		return control.not_allowed_call("call StartLevel.setBundleStartLevel(Bundle, int) " + message, tbc -> { tbc.callStartLevel_setBundleStartLevel(bundle, Integer.valueOf(startlevel)); return null; }, SecurityException.class);
 	}
 
 	public Object allowed_StartLevel_setStartLevel(String message,
 			int startlevel) throws Exception {
 		return control.allowed_call("call StartLevel.setStartLevel(int) "
-				+ message, "callStartLevel_setStartLevel",
-				new Class[] {Integer.class}, new Object[] {Integer.valueOf(
-						startlevel)});
+				+ message, tbc -> { tbc.callStartLevel_setStartLevel(Integer.valueOf(
+						startlevel)); return null; });
 	}
 
 	public boolean not_allowed_StartLevel_setStartLevel(String message,
 			int startlevel) throws Exception {
-		return control
-				.not_allowed_call("call StartLevel.setBundleStartLevel(int) "
-						+ message, "callStartLevel_setStartLevel",
-						new Class[] {Integer.class}, new Object[] {Integer.valueOf(
-								startlevel)}, SecurityException.class);
+		return control.not_allowed_call("call StartLevel.setBundleStartLevel(int) "
+						+ message, tbc -> { tbc.callStartLevel_setStartLevel(Integer.valueOf( startlevel)); return null; }, SecurityException.class);
 	}
 
 	public Object allowed_StartLevel_setInitialBundleStartLevel(String message,
 			int startlevel) throws Exception {
-		return control.allowed_call(
-				"call StartLevel.setInitialBundleStartLevel(int) " + message,
-				"callStartLevel_setInitialBundleStartLevel",
-				new Class[] {Integer.class}, new Object[] {Integer.valueOf(
-						startlevel)});
+		return control.allowed_call("call StartLevel.setInitialBundleStartLevel(int) " + message, tbc -> { tbc.callStartLevel_setInitialBundleStartLevel(Integer.valueOf(
+						startlevel)); return null; });
 	}
 
 	public boolean not_allowed_StartLevel_setInitialBundleStartLevel(
 			String message, int startlevel) throws Exception {
-		return control.not_allowed_call(
-				"call StartLevel.setInitialBundleStartLevel(int) " + message,
-				"callStartLevel_setInitialBundleStartLevel",
-				new Class[] {Integer.class}, new Object[] {Integer.valueOf(
-						startlevel)}, SecurityException.class);
+		return control.not_allowed_call("call StartLevel.setInitialBundleStartLevel(int) " + message, tbc -> { tbc.callStartLevel_setInitialBundleStartLevel(Integer.valueOf(
+						startlevel)); return null; }, SecurityException.class);
 	}
 
 	public Object allowed_BundleStartLevel_setStartLevel(String message,
 			Bundle bundle, int startlevel) throws Exception {
-		return control.allowed_call(
-				"call BundleStartLevel.setStartLevel(Bundle, int) " + message,
-				"callBundleStartLevel_setStartLevel", new Class[] {
-						Bundle.class, Integer.class}, new Object[] {bundle,
-						Integer.valueOf(startlevel)});
+		return control.allowed_call("call BundleStartLevel.setStartLevel(Bundle, int) " + message, tbc -> { tbc.callBundleStartLevel_setStartLevel(bundle, Integer.valueOf(startlevel)); return null; });
 	}
 
 	public boolean not_allowed_BundleStartLevel_setStartLevel(String message,
 			Bundle bundle, int startlevel) throws Exception {
-		return control.not_allowed_call(
-				"call BundleStartLevel.setStartLevel(Bundle, int) " + message,
-				"callBundleStartLevel_setStartLevel", new Class[] {
-						Bundle.class, Integer.class}, new Object[] {bundle,
-						Integer.valueOf(startlevel)}, SecurityException.class);
+		return control.not_allowed_call("call BundleStartLevel.setStartLevel(Bundle, int) " + message, tbc -> { tbc.callBundleStartLevel_setStartLevel(bundle, Integer.valueOf(startlevel)); return null; }, SecurityException.class);
 	}
 
 	public Object allowed_FrameworkStartLevel_setStartLevel(String message,
 			int startlevel) throws Exception {
-		return control.allowed_call(
-				"call FrameworkStartLevel.setStartLevel(int) " + message,
-				"callFrameworkStartLevel_setStartLevel",
-				new Class[] {Integer.class}, new Object[] {Integer.valueOf(
-						startlevel)});
+		return control.allowed_call("call FrameworkStartLevel.setStartLevel(int) " + message, tbc -> { tbc.callFrameworkStartLevel_setStartLevel(Integer.valueOf(
+						startlevel)); return null; });
 	}
 
 	public boolean not_allowed_FrameworkStartLevel_setStartLevel(
 			String message, int startlevel) throws Exception {
-		return control.not_allowed_call(
-				"call FrameworkStartLevel.setStartLevel(int) " + message,
-				"callFrameworkStartLevel_setStartLevel",
-				new Class[] {Integer.class}, new Object[] {Integer.valueOf(
-						startlevel)}, SecurityException.class);
+		return control.not_allowed_call("call FrameworkStartLevel.setStartLevel(int) " + message, tbc -> { tbc.callFrameworkStartLevel_setStartLevel(Integer.valueOf(
+						startlevel)); return null; }, SecurityException.class);
 	}
 
 	public Object allowed_FrameworkStartLevel_setInitialBundleStartLevel(
 			String message, int startlevel) throws Exception {
-		return control.allowed_call(
-				"call FrameworkStartLevel.setInitialBundleStartLevel(int) "
-						+ message,
-				"callFrameworkStartLevel_setInitialBundleStartLevel",
-				new Class[] {Integer.class}, new Object[] {Integer.valueOf(
-						startlevel)});
+		return control.allowed_call("call FrameworkStartLevel.setInitialBundleStartLevel(int) "
+						+ message, tbc -> { tbc.callFrameworkStartLevel_setInitialBundleStartLevel(Integer.valueOf(
+						startlevel)); return null; });
 	}
 
 	public boolean not_allowed_FrameworkStartLevel_setInitialBundleStartLevel(
 			String message, int startlevel) throws Exception {
-		return control.not_allowed_call(
-				"call FrameworkStartLevel.setInitialBundleStartLevel(int) "
-						+ message,
-				"callFrameworkStartLevel_setInitialBundleStartLevel",
-				new Class[] {Integer.class}, new Object[] {Integer.valueOf(
-						startlevel)}, SecurityException.class);
+		return control.not_allowed_call("call FrameworkStartLevel.setInitialBundleStartLevel(int) "
+						+ message, tbc -> { tbc.callFrameworkStartLevel_setInitialBundleStartLevel(Integer.valueOf(
+						startlevel)); return null; }, SecurityException.class);
 	}
 
 	public Object allowed_PermissionAdmin_setPermissions(String message,
 			String location, PermissionInfo[] permissions) throws Exception {
-		return control.allowed_call(
-				"call PermissionAdmin.setPermissions(String, PermissionInfo[]) "
-						+ message, "callPermissionAdmin_setPermissions",
-				new Class[] {String.class, PermissionInfo[].class},
-				new Object[] {location, permissions});
+		return control.allowed_call("call PermissionAdmin.setPermissions(String, PermissionInfo[]) "
+						+ message, tbc -> { tbc.callPermissionAdmin_setPermissions(location, permissions); return null; });
 	}
 
 	public boolean not_allowed_PermissionAdmin_setPermissions(String message,
 			String location, PermissionInfo[] permissions) throws Exception {
-		return control.not_allowed_call(
-				"call PermissionAdmin.setPermissions(String, PermissionInfo[]) "
-						+ message, "callPermissionAdmin_setPermissions",
-				new Class[] {String.class, PermissionInfo[].class},
-				new Object[] {location, permissions}, SecurityException.class);
+		return control.not_allowed_call("call PermissionAdmin.setPermissions(String, PermissionInfo[]) "
+						+ message, tbc -> { tbc.callPermissionAdmin_setPermissions(location, permissions); return null; }, SecurityException.class);
 	}
 
 	public Object allowed_PermissionAdmin_setDefaultPermissions(String message,
 			PermissionInfo[] permissions) throws Exception {
-		return control.allowed_call(
-				"call PermissionAdmin.setDefaultPermissions(PermissionInfo[]) "
-						+ message, "callPermissionAdmin_setDefaultPermissions",
-				new Class[] {PermissionInfo[].class},
-				new Object[] {permissions});
+		return control.allowed_call("call PermissionAdmin.setDefaultPermissions(PermissionInfo[]) "
+						+ message, tbc -> { tbc.callPermissionAdmin_setDefaultPermissions(permissions); return null; });
 	}
 
 	public boolean not_allowed_PermissionAdmin_setDefaultPermissions(
 			String message, PermissionInfo[] permissions) throws Exception {
-		return control.not_allowed_call(
-				"call PermissionAdmin.setDefaultPermissions(PermissionInfo[]) "
-						+ message, "callPermissionAdmin_setDefaultPermissions",
-				new Class[] {PermissionInfo[].class},
-				new Object[] {permissions}, SecurityException.class);
+		return control.not_allowed_call("call PermissionAdmin.setDefaultPermissions(PermissionInfo[]) "
+						+ message, tbc -> { tbc.callPermissionAdmin_setDefaultPermissions(permissions); return null; }, SecurityException.class);
 	}
 
 	public Object allowed_PackageAdmin_refreshPackages(String message,
 			Bundle[] bundles) throws Exception {
-		return control.allowed_call(
-				"call PackageAdmin.refreshPackages(Bundle[]) " + message,
-				"callPackageAdmin_refreshPackages",
-				new Class[] {Bundle[].class}, new Object[] {bundles});
+		return control.allowed_call("call PackageAdmin.refreshPackages(Bundle[]) " + message, tbc -> { tbc.callPackageAdmin_refreshPackages(bundles); return null; });
 	}
 
 	public boolean not_allowed_PackageAdmin_refreshPackages(String message,
 			Bundle[] bundles) throws Exception {
-		return control.not_allowed_call(
-				"call PackageAdmin.refreshPackages(Bundle[]) " + message,
-				"callPackageAdmin_refreshPackages",
-				new Class[] {Bundle[].class}, new Object[] {bundles},
-				SecurityException.class);
+		return control.not_allowed_call("call PackageAdmin.refreshPackages(Bundle[]) " + message, tbc -> { tbc.callPackageAdmin_refreshPackages(bundles); return null; }, SecurityException.class);
 	}
 
 	public Object allowed_PackageAdmin_resolveBundles(String message,
 			Bundle[] bundles) throws Exception {
-		return control.allowed_call(
-				"call PackageAdmin.resolveBundles(Bundle[]) " + message,
-				"callPackageAdmin_resolveBundles",
-				new Class[] {Bundle[].class}, new Object[] {bundles});
+		return control.allowed_call("call PackageAdmin.resolveBundles(Bundle[]) " + message, tbc -> tbc.callPackageAdmin_resolveBundles(bundles));
 	}
 
 	public boolean not_allowed_PackageAdmin_resolveBundles(String message,
 			Bundle[] bundles) throws Exception {
-		return control.not_allowed_call(
-				"call PackageAdmin.resolveBundles(Bundle[]) " + message,
-				"callPackageAdmin_resolveBundles",
-				new Class[] {Bundle[].class}, new Object[] {bundles},
-				SecurityException.class);
+		return control.not_allowed_call("call PackageAdmin.resolveBundles(Bundle[]) " + message, tbc -> tbc.callPackageAdmin_resolveBundles(bundles), SecurityException.class);
 	}
 
 	public Object allowed_FrameworkWiring_refreshBundles(String message,
 			Bundle... bundles) throws Exception {
-		return control.allowed_call(
-				"call FrameworkWiring.refreshBundles(Bundle...) " + message,
-				"callFrameworkWiring_refreshBundles",
-				new Class[] {Bundle[].class}, new Object[] {bundles});
+		return control.allowed_call("call FrameworkWiring.refreshBundles(Bundle...) " + message, tbc -> { tbc.callFrameworkWiring_refreshBundles(bundles); return null; });
 	}
 
 	public boolean not_allowed_FrameworkWiring_refreshBundles(String message,
 			Bundle... bundles) throws Exception {
-		return control.not_allowed_call(
-				"call FrameworkWiring.refreshBundles(Bundle...) " + message,
-				"callFrameworkWiring_refreshBundles",
-				new Class[] {Bundle[].class}, new Object[] {bundles},
-				SecurityException.class);
+		return control.not_allowed_call("call FrameworkWiring.refreshBundles(Bundle...) " + message, tbc -> { tbc.callFrameworkWiring_refreshBundles(bundles); return null; }, SecurityException.class);
 	}
 
 	public Object allowed_FrameworkWiring_resolveBundles(String message,
 			Bundle... bundles) throws Exception {
-		return control.allowed_call(
-				"call FrameworkWiring.resolveBundles(Bundle[]) " + message,
-				"callFrameworkWiring_resolveBundles",
-				new Class[] {Bundle[].class}, new Object[] {bundles});
+		return control.allowed_call("call FrameworkWiring.resolveBundles(Bundle[]) " + message, tbc -> tbc.callFrameworkWiring_resolveBundles(bundles));
 	}
 
 	public boolean not_allowed_FrameworkWiring_resolveBundles(String message,
 			Bundle... bundles) throws Exception {
-		return control.not_allowed_call(
-				"call FrameworkWiring.resolveBundles(Bundle[]) " + message,
-				"callFrameworkWiring_resolveBundles",
-				new Class[] {Bundle[].class}, new Object[] {bundles},
-				SecurityException.class);
+		return control.not_allowed_call("call FrameworkWiring.resolveBundles(Bundle[]) " + message, tbc -> tbc.callFrameworkWiring_resolveBundles(bundles), SecurityException.class);
 	}
 
-	public Object allowed_ConfigurationAdmin_getConfiguration(String message,
-			String pid) throws Exception {
-		return control.allowed_call(
-				"call ConfigurationAdmin.getConfiguration(String) " + message,
-				"callConfigurationAdmin_getConfiguration",
-				new Class[] {String.class}, new Object[] {pid});
-	}
 
-	public boolean not_allowed_ConfigurationAdmin_getConfiguration(
-			String message, String pid) throws Exception {
-		return control.not_allowed_call(
-				"call ConfigurationAdmin.getConfiguration(String) " + message,
-				"callConfigurationAdmin_getConfiguration",
-				new Class[] {String.class}, new Object[] {pid},
-				SecurityException.class);
-	}
 
-	public Object allowed_ConfigurationAdmin_getConfiguration(String message,
-			String pid, String location) throws Exception {
-		return control.allowed_call(
-				"call ConfigurationAdmin.getConfiguration(String, String) "
-						+ message, "callConfigurationAdmin_getConfiguration",
-				new Class[] {String.class, String.class}, new Object[] {pid,
-						location});
-	}
 
-	public boolean not_allowed_ConfigurationAdmin_getConfiguration(
-			String message, String pid, String location) throws Exception {
-		return control.not_allowed_call(
-				"call ConfigurationAdmin.getConfiguration(String, String) "
-						+ message, "callConfigurationAdmin_getConfiguration",
-				new Class[] {String.class, String.class}, new Object[] {pid,
-						location}, SecurityException.class);
-	}
 
-	// TO DO SecurityException ???
-	public Object allowed_ConfigurationAdmin_listConfigurations(String message,
-			String filter) throws Exception {
-		return control
-				.allowed_call(
-						"call ConfigurationAdmin.listConfigurations(String) "
-								+ message,
-						"callConfigurationAdmin_listConfigurations",
-						new Class[] {String.class}, new Object[] {filter});
-	}
 
-	// TO DO SecurityException ???
-	public boolean not_allowed_ConfigurationAdmin_listConfigurations(
-			String message, String filter) throws Exception {
-		return control
-				.not_allowed_call(
-						"call ConfigurationAdmin.listConfigurations(String) "
-								+ message,
-						"callConfigurationAdmin_listConfigurations",
-						new Class[] {String.class}, new Object[] {filter},
-						SecurityException.class);
-	}
 
-	public Object allowed_ConfigurationAdmin_createFactoryConfiguration(
-			String message, String factoryPid) throws Exception {
-		return control.allowed_call(
-				"call ConfigurationAdmin.createFactoryConfiguration(String) "
-						+ message,
-				"callConfigurationAdmin_createFactoryConfiguration",
-				new Class[] {String.class}, new Object[] {factoryPid});
-	}
 
-	public boolean not_allowed_ConfigurationAdmin_createFactoryConfiguration(
-			String message, String factoryPid) throws Exception {
-		return control.not_allowed_call(
-				"call ConfigurationAdmin.createFactoryConfiguration(String) "
-						+ message,
-				"callConfigurationAdmin_createFactoryConfiguration",
-				new Class[] {String.class}, new Object[] {factoryPid},
-				SecurityException.class);
-	}
 
-	public Object allowed_ConfigurationAdmin_createFactoryConfiguration(
-			String message, String factoryPid, String location)
-			throws Exception {
-		return control.allowed_call(
-				"call ConfigurationAdmin.createFactoryConfiguration(String, String) "
-						+ message,
-				"callConfigurationAdmin_createFactoryConfiguration",
-				new Class[] {String.class, String.class}, new Object[] {
-						factoryPid, location});
-	}
 
-	public boolean not_allowed_ConfigurationAdmin_createFactoryConfiguration(
-			String message, String factoryPid, String location)
-			throws Exception {
-		return control.not_allowed_call(
-				"call ConfigurationAdmin.createFactoryConfiguration(String, String) "
-						+ message,
-				"callConfigurationAdmin_createFactoryConfiguration",
-				new Class[] {String.class, String.class}, new Object[] {
-						factoryPid, location}, SecurityException.class);
-	}
 
-	public Object allowed_Configuration_delete(String message, String pid)
-			throws Exception {
-		return control.allowed_call("call Configuration.delete() " + message,
-				"callConfiguration_delete", new Class[] {String.class},
-				new Object[] {pid});
-	}
 
-	public boolean not_allowed_Configuration_delete(String message, String pid)
-			throws Exception {
-		return control.not_allowed_call("call Configuration.delete() "
-				+ message, "callConfiguration_delete",
-				new Class[] {String.class}, new Object[] {pid},
-				SecurityException.class);
-	}
 
-	public Object allowed_Configuration_update(String message, String pid)
-			throws Exception {
-		return control.allowed_call("call Configuration.update() " + message,
-				"callConfiguration_update", new Class[] {String.class},
-				new Object[] {pid});
-	}
 
-	public boolean not_allowed_Configuration_update(String message, String pid)
-			throws Exception {
-		return control.not_allowed_call("call Configuration.update() "
-				+ message, "callConfiguration_update",
-				new Class[] {String.class}, new Object[] {pid},
-				SecurityException.class);
-	}
 
-	public Object allowed_Configuration_update(String message, String pid,
-			Dictionary< ? , ? > properties) throws Exception {
-		return control
-				.allowed_call("call Configuration.update(Dictionary) "
-						+ message, "callConfiguration_update", new Class[] {
-						String.class, Dictionary.class}, new Object[] {pid,
-						properties});
-	}
 
-	public boolean not_allowed_Configuration_update(String message, String pid,
-			Dictionary< ? , ? > properties) throws Exception {
-		return control.not_allowed_call(
-				"call Configuration.update(Dictionary) " + message,
-				"callConfiguration_update", new Class[] {String.class,
-						Dictionary.class}, new Object[] {pid, properties},
-				SecurityException.class);
-	}
 
-	public Object allowed_Configuration_setBundleLocation(String message,
-			String pid) throws Exception {
-		return control.allowed_call(
-				"call Configuration.setBundleLocation(String) " + message,
-				"callConfiguration_setBundleLocation",
-				new Class[] {String.class}, new Object[] {pid});
-	}
 
-	public boolean not_allowed_Configuration_setBundleLocation(String message,
-			String pid) throws Exception {
-		return control.not_allowed_call(
-				"call Configuration.setBundleLocation(String) " + message,
-				"callConfiguration_setBundleLocation",
-				new Class[] {String.class}, new Object[] {pid},
-				SecurityException.class);
-	}
 
 	List<PermissionInfo> createWildcardPermissionInfo(
 			Class< ? extends Permission> permission, String name,

@@ -18,11 +18,12 @@
 
 package org.osgi.test.cases.permissionadmin.tb1;
 
-import static junit.framework.TestCase.fail;
+import static org.assertj.core.api.Assertions.fail;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Dictionary;
 import java.util.Enumeration;
 
@@ -35,12 +36,11 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.framework.SynchronousBundleListener;
 import org.osgi.framework.startlevel.BundleStartLevel;
 import org.osgi.framework.startlevel.FrameworkStartLevel;
+import org.osgi.framework.wiring.FrameworkWiring;
 import org.osgi.service.permissionadmin.PermissionAdmin;
 import org.osgi.service.permissionadmin.PermissionInfo;
 import org.osgi.test.cases.permissionadmin.service.PermissionSignatureTBCService;
-import org.osgi.test.support.OSGiTestCase;
-import org.osgi.test.support.reflect.MethodCall;
-import org.osgi.test.support.wiring.Wiring;
+import org.osgi.test.common.wiring.FrameworkWirings;
 
 /**
  * A bundle that registers a PermissionSignatureTBCService and does a privileged
@@ -173,16 +173,16 @@ public class Activator implements BundleActivator,
 			setBundleStartLevel.invoke(startLevel, bundle, level);
 		}
 		catch (NoSuchMethodException e) {
-			OSGiTestCase.fail("missing method", e);
+			fail("missing method", e);
 		}
 		catch (IllegalAccessException e) {
-			OSGiTestCase.fail("method access exception", e);
+			fail("method access exception", e);
 		}
 		catch (RuntimeException r) {
 			throw r;
 		}
 		catch (Throwable t) {
-			OSGiTestCase.fail("method exception", t);
+			fail("method exception", t);
 		}
 	}
 
@@ -198,16 +198,16 @@ public class Activator implements BundleActivator,
 			setStartLevel.invoke(startLevel, level);
 		}
 		catch (NoSuchMethodException e) {
-			OSGiTestCase.fail("missing method", e);
+			fail("missing method", e);
 		}
 		catch (IllegalAccessException e) {
-			OSGiTestCase.fail("method access exception", e);
+			fail("method access exception", e);
 		}
 		catch (RuntimeException r) {
 			throw r;
 		}
 		catch (Throwable t) {
-			OSGiTestCase.fail("method exception", t);
+			fail("method exception", t);
 		}
 	}
 
@@ -223,16 +223,16 @@ public class Activator implements BundleActivator,
 			setInitialBundleStartLevel.invoke(startLevel, level);
 		}
 		catch (NoSuchMethodException e) {
-			OSGiTestCase.fail("missing method", e);
+			fail("missing method", e);
 		}
 		catch (IllegalAccessException e) {
-			OSGiTestCase.fail("method access exception", e);
+			fail("method access exception", e);
 		}
 		catch (RuntimeException r) {
 			throw r;
 		}
 		catch (Throwable t) {
-			OSGiTestCase.fail("method exception", t);
+			fail("method exception", t);
 		}
 	}
 
@@ -287,16 +287,16 @@ public class Activator implements BundleActivator,
 			refreshPackages.invoke(packageAdmin, (Object) bundles);
 		}
 		catch (NoSuchMethodException e) {
-			OSGiTestCase.fail("missing method", e);
+			fail("missing method", e);
 		}
 		catch (IllegalAccessException e) {
-			OSGiTestCase.fail("method access exception", e);
+			fail("method access exception", e);
 		}
 		catch (RuntimeException r) {
 			throw r;
 		}
 		catch (Throwable t) {
-			OSGiTestCase.fail("method exception", t);
+			fail("method exception", t);
 		}
 	}
 
@@ -314,28 +314,29 @@ public class Activator implements BundleActivator,
 			return result.booleanValue();
 		}
 		catch (NoSuchMethodException e) {
-			OSGiTestCase.fail("missing method", e);
+			fail("missing method", e);
 		}
 		catch (IllegalAccessException e) {
-			OSGiTestCase.fail("method access exception", e);
+			fail("method access exception", e);
 		}
 		catch (RuntimeException r) {
 			throw r;
 		}
 		catch (Throwable t) {
-			OSGiTestCase.fail("method exception", t);
+			fail("method exception", t);
 		}
 		return false;
 	}
 
 	public void callFrameworkWiring_refreshBundles(Bundle... bundles) {
 		log("###FrameworkWiring.refreshBundles(" + toString(bundles) + ")");
-		Wiring.synchronousRefreshBundles(bc, bundles);
+		FrameworkWirings.refreshBundles(bc, bundles);
 	}
 
 	public boolean callFrameworkWiring_resolveBundles(Bundle... bundles) {
 		log("###FrameworkWiring.resolveBundles(" + toString(bundles) + ")");
-		return Wiring.resolveBundles(bc, bundles);
+		FrameworkWiring wiring = bc.getBundle(0).adapt(FrameworkWiring.class);
+		return wiring.resolveBundles(bundles.length == 0 ? null : Arrays.asList(bundles));
 	}
 
 	public static void log(String message) {
